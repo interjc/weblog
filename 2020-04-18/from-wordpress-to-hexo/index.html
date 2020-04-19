@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="google-site-verification" content="google-site-verification=gRN8xWrzBmIH1WAiV6u-05zrAtSyu5yMyttsDl1EAPI">
+  <meta name="baidu-site-verification" content="HiNFcZVrAZY2Oz1b">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"interjc.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="写在最前面的话大概从 03 年开始接触博客到现在，已有十多年。早期换过无数的 BSP，比如 Blogbus、Live Space、百度空间、Blogger 等；也通过自建服务的方式，搭建过 Wordpress。由于这样那样可抗或不可抗的缘由，搬家无数次，用过第三方服务、免费虚拟主机、合租虚拟主机、VPS。遭遇过各种域名、主机事故，比如被封、被黑、服务中断等，本博客却从未中断，主要内容也通过一次次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 Wordpress 迁移到 Hexo">
+<meta property="og:url" content="https://interjc.net/2020-04-18/from-wordpress-to-hexo/">
+<meta property="og:site_name" content="糖醋排骨">
+<meta property="og:description" content="写在最前面的话大概从 03 年开始接触博客到现在，已有十多年。早期换过无数的 BSP，比如 Blogbus、Live Space、百度空间、Blogger 等；也通过自建服务的方式，搭建过 Wordpress。由于这样那样可抗或不可抗的缘由，搬家无数次，用过第三方服务、免费虚拟主机、合租虚拟主机、VPS。遭遇过各种域名、主机事故，比如被封、被黑、服务中断等，本博客却从未中断，主要内容也通过一次次的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://codex.wordpress.org/images/thumb/2/20/manageexport_zh-hans.png/640px-manageexport_zh-hans.png">
+<meta property="og:image" content="https://guides.github.com/features/pages/launch-theme-chooser.png">
+<meta property="og:image" content="https://www.wangbase.com/blogimg/asset/201909/bg2019091108.jpg">
+<meta property="article:published_time" content="2020-04-18T14:19:00.000Z">
+<meta property="article:modified_time" content="2020-04-19T15:28:18.309Z">
+<meta property="article:author" content="Justin Chen">
+<meta property="article:tag" content="wordpress">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://codex.wordpress.org/images/thumb/2/20/manageexport_zh-hans.png/640px-manageexport_zh-hans.png">
+
+<link rel="canonical" href="https://interjc.net/2020-04-18/from-wordpress-to-hexo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从 Wordpress 迁移到 Hexo | 糖醋排骨</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bbea5cdaac52d6434c49db0ad49decb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="糖醋排骨" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">糖醋排骨</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">interjc weblog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-hzz">
+
+    <a href="/homezz-host/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>hzz</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://interjc.net/2020-04-18/from-wordpress-to-hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Justin Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="糖醋排骨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从 Wordpress 迁移到 Hexo
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-18 22:19:00" itemprop="dateCreated datePublished" datetime="2020-04-18T22:19:00+08:00">2020-04-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-19 23:28:18" itemprop="dateModified" datetime="2020-04-19T23:28:18+08:00">2020-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/it/" itemprop="url" rel="index"><span itemprop="name">it</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2020-04-18/from-wordpress-to-hexo/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020-04-18/from-wordpress-to-hexo/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="写在最前面的话"><a href="#写在最前面的话" class="headerlink" title="写在最前面的话"></a>写在最前面的话</h3><p>大概从 03 年开始接触博客到现在，已有十多年。早期换过无数的 BSP，比如 Blogbus、Live Space、百度空间、Blogger 等；也通过自建服务的方式，搭建过 Wordpress。由于这样那样可抗或不可抗的缘由，搬家无数次，用过第三方服务、免费虚拟主机、合租虚拟主机、VPS。遭遇过各种域名、主机事故，比如被封、被黑、服务中断等，本博客却从未中断，主要内容也通过一次次的迁移得以延续。能延续这么久（虽然最近一些年，由于自己懒，长时间处于半停滞状态），个人感觉最重要的一点在于，购买了博客专用的顶级域名 <code>interjc.net</code>，这个域名伴随了各个时期不同形态的本博客，也延续了与博友和读者之间的羁绊。</p>
+<p>自从<a href="http://interjc.net/homezz-host/">东哥的虚拟主机服务</a>关停以后，本博客就一直托管在 <a href="https://www.vultr.com/?ref=7500552" target="_blank" rel="noopener">Vultr VPS</a> 上，速度和稳定性都还 OK，并且由于是 VPS，还通过 <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s encrypted</a> 启用了 <code>https</code>，整个使用还是比较平滑的。</p>
+<a id="more"></a>
+
+<h3 id="契机"><a href="#契机" class="headerlink" title="契机"></a>契机</h3><p>虽然 <a href="https://wordpress.org/" target="_blank" rel="noopener">Wordpress</a> 和 <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 都是比较优秀的 CMS 系统，所以在此不讨论他们孰优孰劣的问题。他们之间的区别是显而易见的： Wordpress 是一个相对较重的 CMS 平台，所有的数据保存在 MySQL 数据库中，需要在一个支持 PHP 的环境中运行；Hexo 所有的数据都保存在文件中，通过预编译输出为静态文件，可以托管于任何一个静态文件服务器（基于 Nginx、Apache、IIS 等）中。</p>
+<p>Hexo 像极了早期的 Blogger 自托管模式，每一次你修改了博客中的任何东西，他都需要重新编译所有的内容为新的静态文件，并且需要发布到静态文件服务器中。对于早年的我来说，博客配置、主题的修改和文章的发布、维护相当频繁，自然是无法忍受 Blogger 系统极慢的发布速度，所以后来一鼓作气搬到了 Wordpress。</p>
+<p>但是时过境迁，作为一个连博文都懒得时常更新的人，更不会不停修改自己的博客主题了，并且当下各种本地或在线的工具链，都使得发布过程自动化成为了可能，即便是使用 Hexo 这种预编译的方案，也可以使博主只需要专注于博客内容本身。基于此，Wordpress 的优越性逐渐显得荡然无存，臃肿的系统占用着 VPS 资源，如果再配上一个大半年都不更新的博主，也是够浪费资源的。</p>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>博客搬家毕竟是麻烦事，各种迁移和设置，所以在实施之前，认真思考了一下自己的需求，做了一个可行性调研。新的博客需要满足：</p>
+<ul>
+<li>支持 HTTPS</li>
+<li>可以绑定独立域名</li>
+<li>旧的博客文章可以方便地迁移</li>
+<li>尽可能方便的文章发布流程</li>
+<li>博客系统高度自主可控</li>
+<li>服务器稳定</li>
+<li>墙内可访问</li>
+<li>尽可能轻量级</li>
+</ul>
+<h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><p>说干就干，通过将 Hexo 部署到 Github 上，使用 Github 的 Action 做 CI/CD，完美实现了以上所有的需求。你现在看到的本博客正是基于上述方案搭建的。整个迁移过程经历了以下步骤，我将逐个讲解：</p>
+<h4 id="从旧博客导出-Wordpress-文件"><a href="#从旧博客导出-Wordpress-文件" class="headerlink" title="从旧博客导出 Wordpress 文件"></a>从旧博客导出 Wordpress 文件</h4><p>其实这一步是比较简单的，在 Wordpress 后台界面，选择 <code>工具 -&gt; 导出</code>，将导出的 xml 文件保存在本地，命名为 <code>wordpress.xml</code>。</p>
+<p><img src="https://codex.wordpress.org/images/thumb/2/20/manageexport_zh-hans.png/640px-manageexport_zh-hans.png" alt=""></p>
+<h4 id="Github-仓库创建、博客项目初始化"><a href="#Github-仓库创建、博客项目初始化" class="headerlink" title="Github 仓库创建、博客项目初始化"></a>Github 仓库创建、博客项目初始化</h4><p>我们将创建两个 Github 仓库，一个用于放置博客程序本体，另一个用于发布博客静态页面，按如下要求配置：</p>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>仓库名</th>
+<th>仓库类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>博客程序</td>
+<td>blog</td>
+<td>Private</td>
+</tr>
+<tr>
+<td>静态文件</td>
+<td>weblog</td>
+<td>Public</td>
+</tr>
+</tbody></table>
+<h4 id="本地-Hexo-系统初始化，并导入-Wordpress-数据"><a href="#本地-Hexo-系统初始化，并导入-Wordpress-数据" class="headerlink" title="本地 Hexo 系统初始化，并导入 Wordpress 数据"></a>本地 Hexo 系统初始化，并导入 Wordpress 数据</h4><h5 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h5><p>参考 <a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hexo 官方手册</a>，先安装 <code>hexo-cli</code></p>
+<pre><code class="shell">npm install -g hexo-cli</code></pre>
+<p>再使用 <code>hexo-cli</code> 在本地创建 hexo 工程</p>
+<pre><code class="shell">cd ~/path/to/workspace # 此处使用 cd 命令定位到相应目录
+hexo init blog
+cd blog &amp;&amp; npm install</code></pre>
+<h5 id="导入-Wordpress-数据"><a href="#导入-Wordpress-数据" class="headerlink" title="导入 Wordpress 数据"></a>导入 Wordpress 数据</h5><p>参考官方<a href="https://hexo.io/zh-cn/docs/migration" target="_blank" rel="noopener">迁移文档</a>，先安装 <code>hexo-migrator-wordpress</code> 插件，然后导入之前步骤中下载的 wordpress 导出文件：</p>
+<pre><code class="shell">npm install hexo-migrator-wordpress --save
+hexo migrate wordpress ~/path/to/wordpress.xml # ~/path/to/wordpress.xml 替换为真实路径</code></pre>
+<h5 id="同步到-Github-仓库"><a href="#同步到-Github-仓库" class="headerlink" title="同步到 Github 仓库"></a>同步到 Github 仓库</h5><p>在上述创建的 <code>blog</code> 仓库，找到 <code>Clone or Download</code> 按钮，复制命令并在本地命令行工具中执行，形如： <code>https://github.com/yourname/blog.git</code>。</p>
+<p>在本地 blog 目录，执行以下命令 (<a href="https://help.github.com/en/github/using-git/adding-a-remote" target="_blank" rel="noopener">参考</a>)，将 hexo 主程序代码上传到 Github 上的 <strong>blog</strong> 仓库：</p>
+<pre><code class="shell">cd ~/path/to/workspace/blog
+git init
+git remote add origin https://github.com/yourname/blog.git
+git push -f</code></pre>
+<p>此处操作，未接触过 git 的朋友，建议学习一下 <a href="https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html" target="_blank" rel="noopener">git 相关操作</a>后进行，或者使用 <a href="https://www.sourcetreeapp.com/" target="_blank" rel="noopener">SourceTree</a> 等可视化工具。</p>
+<h4 id="主题设置"><a href="#主题设置" class="headerlink" title="主题设置"></a>主题设置</h4><p>你可以使用默认主题，也可以使用主流第三方主题，比如 <a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">Next</a>，具体配置方法自行查看：</p>
+<p><a href="https://theme-next.org/docs/getting-started/" target="_blank" rel="noopener">https://theme-next.org/docs/getting-started/</a></p>
+<h4 id="构建和发布"><a href="#构建和发布" class="headerlink" title="构建和发布"></a>构建和发布</h4><p>无论我们是否需要自动化构建和发布，都需要在本地尝试发布静态博客，把这个步骤走通以后，再进行后续的高阶设置。</p>
+<h5 id="修改-Hexo-设置"><a href="#修改-Hexo-设置" class="headerlink" title="修改 Hexo 设置"></a>修改 Hexo 设置</h5><p>在 <code>_config.yml</code> 文件中，搜索 <code>deploy</code>，修改为 <code>weblog</code> 对应的仓库：</p>
+<pre><code class="yaml">deploy:
+- type: git
+  repo: git@github.com:yourname/weblog.git # yourname 替换为你的 github 真实用户名
+  branch: gh-pages</code></pre>
+<h5 id="安装发布插件"><a href="#安装发布插件" class="headerlink" title="安装发布插件"></a>安装发布插件</h5><pre><code class="shell">npm install hexo-deployer-git --save</code></pre>
+<h5 id="构建并发布"><a href="#构建并发布" class="headerlink" title="构建并发布"></a>构建并发布</h5><pre><code class="shell">hexo g -d</code></pre>
+<h5 id="查看发布状态"><a href="#查看发布状态" class="headerlink" title="查看发布状态"></a>查看发布状态</h5><p>此时我们打开 github.com/yourname/weblog/settings 的仓库配置页面，找到 <code>GitHub Pages</code> 这一栏，你会找到一个相应的访问地址，那就是你的博客地址了，形如（<a href="https://guides.github.com/features/pages/" target="_blank" rel="noopener">参考</a>）：</p>
+<p><img src="https://guides.github.com/features/pages/launch-theme-chooser.png" alt=""></p>
+<p>至此，你已经完成了最基本的迁移，如果需要绑定域名，只需要填下下面的 <code>Custom Domain</code> 信息即可。</p>
+<p>需要注意的是，<strong>当你绑定域名时需要做一些其他的关联操作，这个将在下面的专门章节中讲解</strong>。</p>
+<h4 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h4><p>如果需要为 weblog 仓库上的页面添加独立域名，可以参考 <a href="https://help.github.com/en/github/working-with-github-pages/about-custom-domains-and-github-pages" target="_blank" rel="noopener">Github 官方手册</a>，主要关注以下链接：</p>
+<ul>
+<li><a href="https://help.github.com/en/github/working-with-github-pages/about-custom-domains-and-github-pages#using-a-subdomain-for-your-github-pages-site" target="_blank" rel="noopener">Using a subdomain for your GitHub Pages site</a> (绑定子域名，比如： xx.yy.com)</li>
+<li><a href="https://help.github.com/en/github/working-with-github-pages/about-custom-domains-and-github-pages#using-an-apex-domain-for-your-github-pages-site" target="_blank" rel="noopener">Using an apex domain for your GitHub Pages site</a> （绑定顶级域名，比如： yy.com）</li>
+</ul>
+<p>按照官网所说的步骤设置即可，Github 会自动往仓库里添加一个名为 <code>CNAME</code> 的文件，由于 Hexo 每次构建时，都会删除所有的静态文件，所以我们需要将此文件原样拷贝到本地 blog 程序下的 <code>source</code> 目录中。</p>
+<p>当域名审核完毕后，就可以勾选 <code>Enforce HTTPS</code> 复选框。至此，整个博客的迁移工作也就已经基本完成了。</p>
+<h4 id="自动化构建和发布"><a href="#自动化构建和发布" class="headerlink" title="自动化构建和发布"></a>自动化构建和发布</h4><h5 id="添加秘钥对"><a href="#添加秘钥对" class="headerlink" title="添加秘钥对"></a>添加秘钥对</h5><p>打开命令行提示符，输入如下命令，创建秘钥对（如果是 Windows 电脑需要用 ssh-keygen 命令生成一组私钥和公钥）：</p>
+<pre><code class="shell">ssh-keygen -f blog-deploy-key # 无脑回车</code></pre>
+<p>产生如下文件：</p>
+<ul>
+<li><code>blog-deploy-key</code> (私钥)</li>
+<li><code>blog-deploy-key.pub</code> (公钥)</li>
+</ul>
+<p>在 Github 仓库中，做如下操作：</p>
+<ul>
+<li>在 weblog 仓库中，点击 <code>settings -&gt; Deploy keys -&gt; Add deploy key</code>，填写 <code>name</code> 为 <code>blog-deploy-key.pub</code>, <code>value</code> 为<strong>公钥</strong> (blog-deploy-key.pub) 中所有的文本内容（可以用 vscode、sublime 等文本编辑器打开）</li>
+<li>在 blog 仓库中，点击 <code>settings -&gt; Deploy keys -&gt; Add deploy key</code>，填写 <code>name</code> 为 <code>HEXO_DEPLOY_PRI</code>, <code>value</code> 为<strong>私钥</strong> (blog-deploy-key) 中所有的文本内容</li>
+</ul>
+<h5 id="配置持续集成-发布（CI-CD）"><a href="#配置持续集成-发布（CI-CD）" class="headerlink" title="配置持续集成/发布（CI/CD）"></a>配置持续集成/发布（CI/CD）</h5><p>在 blog 仓库中，点击 <code>Actions -&gt; New Workflow -&gt; Set up a workflow yourself</code>，输入文件内容如下：</p>
+<pre><code class="yaml"># This is a basic workflow to help you get started with Actions
+
+name: Publish latest blog
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.*]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # 注意将 user.email 修改为你自己的
+      - name: Configuration environment
+        env:
+          HEXO_DEPLOY_PRI: ${{secrets.HEXO_DEPLOY_PRI}}
+        run: |
+          mkdir -p ~/.ssh/
+          echo &quot;$HEXO_DEPLOY_PRI&quot; &gt; ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com &gt;&gt; ~/.ssh/known_hosts
+          git config --global user.name &quot;Blog CI Action&quot;
+          git config --global user.email &quot;yourname@email.com&quot;
+
+      - name: Install dependencies
+        run: |
+          npm i -g hexo-cli
+          npm ci
+
+      - name: Publish hexo
+        run: |
+          npm run publish
+
+      # 这一步的主要目的是向百度站长 API 提交链接，如果有需要再取消注释
+      # - name: Submit to baidu
+      #   run: |
+      #     bash submit.sh</code></pre>
+<h5 id="完成-CICD-参考"><a href="#完成-CICD-参考" class="headerlink" title="完成 CICD 参考"></a>完成 CICD <a href="https://hdj.me/github-actions-hexo-cicd/" target="_blank" rel="noopener">参考</a></h5><p>至此，你每一次同步 blog 仓库的代码到 github 都会触发 CICD actions，博客就会自动构建发布了。盗一张阮一峰的图给大家看看构建过程的 log 长啥样：</p>
+<p><img src="https://www.wangbase.com/blogimg/asset/201909/bg2019091108.jpg" alt=""></p>
+<p>更多高阶玩法可以查看阮一峰的 <a href="http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html" target="_blank" rel="noopener">Github Actions 入门教程</a>。</p>
+<h4 id="SEO"><a href="#SEO" class="headerlink" title="SEO"></a>SEO</h4><p>先安装和配置以下这几个插件：</p>
+<ul>
+<li><a href="https://github.com/hexojs/hexo-generator-sitemap" target="_blank" rel="noopener">hexo-generator-sitemap</a></li>
+<li><a href="https://github.com/coneycode/hexo-generator-baidu-sitemap" target="_blank" rel="noopener">hexo-generator-baidu-sitemap</a></li>
+<li><a href="https://github.com/hexojs/hexo-generator-feed" target="_blank" rel="noopener">hexo-generator-feed</a></li>
+</ul>
+<p>时间有限暂时先不详细的说这部分内容了，先放出 CI/CD 这一步中缺失的 <code>submit.sh</code> 源码：</p>
+<pre><code class="shell">#!/bin/bash
+
+# Generate sitemap.txt
+sed -n &#39;s:.*&lt;loc&gt;\(.*\)&lt;/loc&gt;.*:\1:p&#39; ./public/baidusitemap.xml &gt; ./public/sitemap.txt
+
+# submit to baidu
+# 在 https://ziyuan.baidu.com/linksubmit 中获取相关 token
+curl -H &#39;Content-Type:text/plain&#39; --data-binary @public/sitemap.txt &quot;http://data.zz.baidu.com/urls?site=https://interjc.net&amp;token=your_baidu_token&quot;</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wordpress/" rel="tag"># wordpress</a>
+              <a href="/tags/hexo/" rel="tag"># hexo</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020-04-12/hello-Hexo/" rel="prev" title="你好，Hexo！">
+      <i class="fa fa-chevron-left"></i> 你好，Hexo！
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#写在最前面的话"><span class="nav-number">1.</span> <span class="nav-text">写在最前面的话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#契机"><span class="nav-number">2.</span> <span class="nav-text">契机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">3.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方案"><span class="nav-number">4.</span> <span class="nav-text">方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从旧博客导出-Wordpress-文件"><span class="nav-number">4.1.</span> <span class="nav-text">从旧博客导出 Wordpress 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Github-仓库创建、博客项目初始化"><span class="nav-number">4.2.</span> <span class="nav-text">Github 仓库创建、博客项目初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#本地-Hexo-系统初始化，并导入-Wordpress-数据"><span class="nav-number">4.3.</span> <span class="nav-text">本地 Hexo 系统初始化，并导入 Wordpress 数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#安装-Hexo"><span class="nav-number">4.3.1.</span> <span class="nav-text">安装 Hexo</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#导入-Wordpress-数据"><span class="nav-number">4.3.2.</span> <span class="nav-text">导入 Wordpress 数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#同步到-Github-仓库"><span class="nav-number">4.3.3.</span> <span class="nav-text">同步到 Github 仓库</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主题设置"><span class="nav-number">4.4.</span> <span class="nav-text">主题设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建和发布"><span class="nav-number">4.5.</span> <span class="nav-text">构建和发布</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#修改-Hexo-设置"><span class="nav-number">4.5.1.</span> <span class="nav-text">修改 Hexo 设置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装发布插件"><span class="nav-number">4.5.2.</span> <span class="nav-text">安装发布插件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构建并发布"><span class="nav-number">4.5.3.</span> <span class="nav-text">构建并发布</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看发布状态"><span class="nav-number">4.5.4.</span> <span class="nav-text">查看发布状态</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#域名绑定"><span class="nav-number">4.6.</span> <span class="nav-text">域名绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自动化构建和发布"><span class="nav-number">4.7.</span> <span class="nav-text">自动化构建和发布</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#添加秘钥对"><span class="nav-number">4.7.1.</span> <span class="nav-text">添加秘钥对</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置持续集成-发布（CI-CD）"><span class="nav-number">4.7.2.</span> <span class="nav-text">配置持续集成&#x2F;发布（CI&#x2F;CD）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#完成-CICD-参考"><span class="nav-number">4.7.3.</span> <span class="nav-text">完成 CICD 参考</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SEO"><span class="nav-number">4.8.</span> <span class="nav-text">SEO</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Justin Chen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Justin Chen</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">374</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">333</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:interjc+blog@gmail.com" title="Mail → mailto:interjc+blog@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/interjc" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/interjc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/interjc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://interjc.net/atom.xml" title="RSS → https:&#x2F;&#x2F;interjc.net&#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://zeuscn.net/" title="http:&#x2F;&#x2F;zeuscn.net&#x2F;" rel="noopener" target="_blank">囧布斯</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://louishan.com/" title="http:&#x2F;&#x2F;louishan.com&#x2F;" rel="noopener" target="_blank">Louis Han</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Justin Chen</span>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e981390b3aeb9bc" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '6ec783779fdf80ca1420',
+      clientSecret: 'cc123887189e2115ae28d76105c2d0ea7419ccb8',
+      repo        : 'weblog',
+      owner       : 'interjc',
+      admin       : ['interjc'],
+      id          : '5f5bbc545df5d9cb3807b511bea8ca44',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://interjc.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://interjc.net/2020-04-18/from-wordpress-to-hexo/";
+    this.page.identifier = "2020-04-18/from-wordpress-to-hexo/";
+    this.page.title = "从 Wordpress 迁移到 Hexo";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://interjc.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

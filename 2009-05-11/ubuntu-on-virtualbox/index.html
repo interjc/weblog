@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="google-site-verification" content="google-site-verification=gRN8xWrzBmIH1WAiV6u-05zrAtSyu5yMyttsDl1EAPI">
+  <meta name="baidu-site-verification" content="HiNFcZVrAZY2Oz1b">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"interjc.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Ubuntu的详细安装教程不是没有，我这里只是简要说明一下用虚拟机的安装Ubuntu的方法。 写在动手之前，你首先要明白，Ubuntu不是免费版的Windows，你安装以后也许并不会觉得他就像传说中那么好用(用你的Windows思维来使用的话)；其次，Ubuntu这个潭子水很深，需要有耐心或者有经验的人才能够很享受的去使用它；另外补充说一点，如果是自己随便玩玩就别下那个服务器版本的，老老实实下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用虚拟机安装Ubuntu 9.04">
+<meta property="og:url" content="https://interjc.net/2009-05-11/ubuntu-on-virtualbox/">
+<meta property="og:site_name" content="糖醋排骨">
+<meta property="og:description" content="Ubuntu的详细安装教程不是没有，我这里只是简要说明一下用虚拟机的安装Ubuntu的方法。 写在动手之前，你首先要明白，Ubuntu不是免费版的Windows，你安装以后也许并不会觉得他就像传说中那么好用(用你的Windows思维来使用的话)；其次，Ubuntu这个潭子水很深，需要有耐心或者有经验的人才能够很享受的去使用它；另外补充说一点，如果是自己随便玩玩就别下那个服务器版本的，老老实实下载">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1111-18-41.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/1242008996-clip-6kb.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-21-35.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1110-43-44.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1110-44-40.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-25-48.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-26-23.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-28-42.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-30-59.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-32-33.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-40-13.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-23-31.png">
+<meta property="og:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-50-17.png">
+<meta property="article:published_time" content="2009-05-11T03:20:28.000Z">
+<meta property="article:modified_time" content="2020-04-19T15:28:18.317Z">
+<meta property="article:author" content="Justin Chen">
+<meta property="article:tag" content="VirtualBox">
+<meta property="article:tag" content="Ubuntu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1111-18-41.png">
+
+<link rel="canonical" href="https://interjc.net/2009-05-11/ubuntu-on-virtualbox/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>用虚拟机安装Ubuntu 9.04 | 糖醋排骨</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bbea5cdaac52d6434c49db0ad49decb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="糖醋排骨" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">糖醋排骨</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">interjc weblog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-hzz">
+
+    <a href="/homezz-host/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>hzz</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://interjc.net/2009-05-11/ubuntu-on-virtualbox/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Justin Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="糖醋排骨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用虚拟机安装Ubuntu 9.04
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2009-05-11 11:20:28" itemprop="dateCreated datePublished" datetime="2009-05-11T11:20:28+08:00">2009-05-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-19 23:28:18" itemprop="dateModified" datetime="2020-04-19T23:28:18+08:00">2020-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/IT/" itemprop="url" rel="index"><span itemprop="name">IT</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2009-05-11/ubuntu-on-virtualbox/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2009-05-11/ubuntu-on-virtualbox/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a href="http://interjc.net/archives/2009/05/11/ubuntu-on-virtualbox.html"><img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1111-18-41.png" alt=""></a> <a href="http://forum.ubuntu.org.cn/viewtopic.php?f=77&t=166326" target="_blank" rel="noopener">Ubuntu的详细安装教程</a>不是没有，我这里只是简要说明一下用虚拟机的安装Ubuntu的方法。 写在动手之前，你首先要明白，Ubuntu不是免费版的Windows，你安装以后也许并不会觉得他就像传说中那么好用(用你的Windows思维来使用的话)；其次，Ubuntu这个潭子水很深，需要有耐心或者有经验的人才能够很享受的去使用它；另外补充说一点，如果是自己随便玩玩就别下那个服务器版本的，老老实实下载桌面版吧，其实功能都是差不多的，只是服务器版本没有GNU界面而已.. 而后是资源准备。你需要一台能上网的在21世纪购买的计算机，一个<a href="http://ubuntu.org.cn/getubuntu/download/" target="_blank" rel="noopener">ubuntu-9.04-desktop-i386.iso</a>文件，一个虚拟机软件(比如<a href="http://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">VirtualBox</a>)。 //===============以下是安装步骤=================== 1. 首先安装VirtualBox，如果不清楚怎么设置高级选项的话，直接先一路“下一步”就可以了，碰见安装位置驱动的时候直接无脑“仍然继续”，安装完成有可能会要你重启计算机，虽然你不重启也可以开始用虚拟机了，但是还是建议你重启一下。重启完以后你可能会发现自己上不了网了，如果出现这种情况，点击“网上邻居”–“查看网络连接”–将“VirtualBox Host-Only Network”禁用； <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/1242008996-clip-6kb.png" alt=""> 2. 打开VirtualBox，点击“新建”按钮创建一个虚拟机，这时候已经是全中文界面了，相信对大家来说这并非难事，就按自己喜好随便建一个吧，全部按照默认设置也行； <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-21-35.png" alt=""> 3. 新建好以后别先急着运行虚拟机，先配置一下，点击“设置”，在“光驱”选项中勾选“分配光驱”，按箭头所示“注册”你下载好的的ISO虚拟光盘，如下图所示： <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1110-43-44.png" alt=""> <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-1110-44-40.png" alt=""> 4. 先不要管网络的问题，因为安装Ubuntu的时候如果连接上了网络，系统会自动寻找更新，大大影响安装速度和你等待的心情，这个事情等下再做，这时候我们就可以开始正式安装Ubuntu了，点击“开始”来运行你的虚拟电脑，按图索骥： <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-25-48.png" alt="直接选择安装，第二项"> <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-26-23.png" alt="LOGO出来了，兴奋吗？"> <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-28-42.png" alt="一路默认下来，会出现分区选项，初学者就选“使用整个硬盘吧”，放心，这里说的是虚拟机的虚拟硬盘.."> <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-30-59.png" alt="会要你设置用户名密码什么的，这个本来不想说，不过如果选择了“自动登录”会比较方便一点.."> <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-32-33.png" alt="漫长的读条开始了，这时候你可以按右边那个“Ctrl”键切换出去上网听歌玩游戏了，这就是用虚拟机的好处"> <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-40-13.png" alt="安装完成了，这个时候系统叫你重启电脑你就点吧，反正没有什么选择的"> 5. 装到这里系统算是装到机器里面去了，可是好像不能上网，呵呵，虚拟机的网络还没设置呢，当然不能上网，把虚拟机关掉(不是把VirtualBox关掉，怎么关机应该都知道了吧..)，点“设置”，进“网络”选项，其中第二个下拉菜单选择“Bridged Adapter”，就是桥接的意思，具体意义分析来也没啥实际意义，反正这样选了就可以上网了可能大概应该..顺手在“光驱”选项里把“光驱”选项取消掉或者把虚拟光盘释放掉吧，系统都装完了光盘自然也就没用了.. <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-23-31.png" alt=""> 6. 这时候我们再次打开虚拟电脑，是不是已经可以上网了呢？反正我是可以了。 <img src="http://i824.photobucket.com/albums/zz165/interjc/blogging/2009-5-119-50-17.png" alt=""> 写到这里这个可以上网的Ubuntu已经安装完成了，别高兴得太早，好戏才刚刚开始，还有plenty of work等着你去做呢，我推荐你如果感兴趣并有时间的话去<a href="http://forum.ubuntu.org.cn" target="_blank" rel="noopener">Ubuntu社区</a>潜心学习吧，路漫漫其修远兮，壮士一去兮不复反，祝您好运！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/VirtualBox/" rel="tag"># VirtualBox</a>
+              <a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2009-04-28/trouble-with-virtualbox/" rel="prev" title="VirtualBox的大问题">
+      <i class="fa fa-chevron-left"></i> VirtualBox的大问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2009-05-12/5-12/" rel="next" title="5·12">
+      5·12 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Justin Chen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Justin Chen</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">374</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">333</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:interjc+blog@gmail.com" title="Mail → mailto:interjc+blog@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/interjc" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/interjc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/interjc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://interjc.net/atom.xml" title="RSS → https:&#x2F;&#x2F;interjc.net&#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://zeuscn.net/" title="http:&#x2F;&#x2F;zeuscn.net&#x2F;" rel="noopener" target="_blank">囧布斯</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://louishan.com/" title="http:&#x2F;&#x2F;louishan.com&#x2F;" rel="noopener" target="_blank">Louis Han</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Justin Chen</span>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e981390b3aeb9bc" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '6ec783779fdf80ca1420',
+      clientSecret: 'cc123887189e2115ae28d76105c2d0ea7419ccb8',
+      repo        : 'weblog',
+      owner       : 'interjc',
+      admin       : ['interjc'],
+      id          : 'cb7f3d6d02767db7f19703d493ec35eb',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://interjc.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://interjc.net/2009-05-11/ubuntu-on-virtualbox/";
+    this.page.identifier = "2009-05-11/ubuntu-on-virtualbox/";
+    this.page.title = "用虚拟机安装Ubuntu 9.04";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://interjc.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

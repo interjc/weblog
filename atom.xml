@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>糖醋排骨</title>
+  
+  <subtitle>interjc weblog</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://interjc.net/"/>
+  <updated>2020-04-19T15:28:18.309Z</updated>
+  <id>https://interjc.net/</id>
+  
+  <author>
+    <name>Justin Chen</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>从 Wordpress 迁移到 Hexo</title>
+    <link href="https://interjc.net/2020-04-18/from-wordpress-to-hexo/"/>
+    <id>https://interjc.net/2020-04-18/from-wordpress-to-hexo/</id>
+    <published>2020-04-18T14:19:00.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="写在最前面的话"><a href="#写在最前面的话" class="headerlink" title="写在最前面的话"></a>写在最前面的话</h3><p>大概从 03 年开始接触博客到现在，已有十多年。早期换过无数的 BSP，比如 Blogbus、Live Space、百度空间、Blogger 等；也通过自建服务的方式，搭建过 Wordpress。由于这样那样可抗或不可抗的缘由，搬家无数次，用过第三方服务、免费虚拟主机、合租虚拟主机、VPS。遭遇过各种域名、主机事故，比如被封、被黑、服务中断等，本博客却从未中断，主要内容也通过一次次的迁移得以延续。能延续这么久（虽然最近一些年，由于自己懒，长时间处于半停滞状态），个人感觉最重要的一点在于，购买了博客专用的顶级域名 <code>interjc.net</code>，这个域名伴随了各个时期不同形态的本博客，也延续了与博友和读者之间的羁绊。</p><p>自从<a href="http://interjc.net/homezz-host/">东哥的虚拟主机服务</a>关停以后，本博客就一直托管在 <a href="https://www.vultr.com/?ref=7500552" target="_blank" rel="noopener">Vultr VPS</a> 上，速度和稳定性都还 OK，并且由于是 VPS，还通过 <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s encrypted</a> 启用了 <code>https</code>，整个使用还是比较平滑的。</p><a id="more"></a><h3 id="契机"><a href="#契机" class="headerlink" title="契机"></a>契机</h3><p>虽然 <a href="https://wordpress.org/" target="_blank" rel="noopener">Wordpress</a> 和 <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 都是比较优秀的 CMS 系统，所以在此不讨论他们孰优孰劣的问题。他们之间的区别是显而易见的： Wordpress 是一个相对较重的 CMS 平台，所有的数据保存在 MySQL 数据库中，需要在一个支持 PHP 的环境中运行；Hexo 所有的数据都保存在文件中，通过预编译输出为静态文件，可以托管于任何一个静态文件服务器（基于 Nginx、Apache、IIS 等）中。</p><p>Hexo 像极了早期的 Blogger 自托管模式，每一次你修改了博客中的任何东西，他都需要重新编译所有的内容为新的静态文件，并且需要发布到静态文件服务器中。对于早年的我来说，博客配置、主题的修改和文章的发布、维护相当频繁，自然是无法忍受 Blogger 系统极慢的发布速度，所以后来一鼓作气搬到了 Wordpress。</p><p>但是时过境迁，作为一个连博文都懒得时常更新的人，更不会不停修改自己的博客主题了，并且当下各种本地或在线的工具链，都使得发布过程自动化成为了可能，即便是使用 Hexo 这种预编译的方案，也可以使博主只需要专注于博客内容本身。基于此，Wordpress 的优越性逐渐显得荡然无存，臃肿的系统占用着 VPS 资源，如果再配上一个大半年都不更新的博主，也是够浪费资源的。</p><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>博客搬家毕竟是麻烦事，各种迁移和设置，所以在实施之前，认真思考了一下自己的需求，做了一个可行性调研。新的博客需要满足：</p><ul><li>支持 HTTPS</li><li>可以绑定独立域名</li><li>旧的博客文章可以方便地迁移</li><li>尽可能方便的文章发布流程</li><li>博客系统高度自主可控</li><li>服务器稳定</li><li>墙内可访问</li><li>尽可能轻量级</li></ul><h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><p>说干就干，通过将 Hexo 部署到 Github 上，使用 Github 的 Action 做 CI/CD，完美实现了以上所有的需求。你现在看到的本博客正是基于上述方案搭建的。整个迁移过程经历了以下步骤，我将逐个讲解：</p><h4 id="从旧博客导出-Wordpress-文件"><a href="#从旧博客导出-Wordpress-文件" class="headerlink" title="从旧博客导出 Wordpress 文件"></a>从旧博客导出 Wordpress 文件</h4><p>其实这一步是比较简单的，在 Wordpress 后台界面，选择 <code>工具 -&gt; 导出</code>，将导出的 xml 文件保存在本地，命名为 <code>wordpress.xml</code>。</p><p><img src="https://codex.wordpress.org/images/thumb/2/20/manageexport_zh-hans.png/640px-manageexport_zh-hans.png" alt=""></p><h4 id="Github-仓库创建、博客项目初始化"><a href="#Github-仓库创建、博客项目初始化" class="headerlink" title="Github 仓库创建、博客项目初始化"></a>Github 仓库创建、博客项目初始化</h4><p>我们将创建两个 Github 仓库，一个用于放置博客程序本体，另一个用于发布博客静态页面，按如下要求配置：</p><table><thead><tr><th>用途</th><th>仓库名</th><th>仓库类型</th></tr></thead><tbody><tr><td>博客程序</td><td>blog</td><td>Private</td></tr><tr><td>静态文件</td><td>weblog</td><td>Public</td></tr></tbody></table><h4 id="本地-Hexo-系统初始化，并导入-Wordpress-数据"><a href="#本地-Hexo-系统初始化，并导入-Wordpress-数据" class="headerlink" title="本地 Hexo 系统初始化，并导入 Wordpress 数据"></a>本地 Hexo 系统初始化，并导入 Wordpress 数据</h4><h5 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h5><p>参考 <a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hexo 官方手册</a>，先安装 <code>hexo-cli</code></p><pre><code class="shell">npm install -g hexo-cli</code></pre><p>再使用 <code>hexo-cli</code> 在本地创建 hexo 工程</p><pre><code class="shell">cd ~/path/to/workspace # 此处使用 cd 命令定位到相应目录hexo init blogcd blog &amp;&amp; npm install</code></pre><h5 id="导入-Wordpress-数据"><a href="#导入-Wordpress-数据" class="headerlink" title="导入 Wordpress 数据"></a>导入 Wordpress 数据</h5><p>参考官方<a href="https://hexo.io/zh-cn/docs/migration" target="_blank" rel="noopener">迁移文档</a>，先安装 <code>hexo-migrator-wordpress</code> 插件，然后导入之前步骤中下载的 wordpress 导出文件：</p><pre><code class="shell">npm install hexo-migrator-wordpress --savehexo migrate wordpress ~/path/to/wordpress.xml # ~/path/to/wordpress.xml 替换为真实路径</code></pre><h5 id="同步到-Github-仓库"><a href="#同步到-Github-仓库" class="headerlink" title="同步到 Github 仓库"></a>同步到 Github 仓库</h5><p>在上述创建的 <code>blog</code> 仓库，找到 <code>Clone or Download</code> 按钮，复制命令并在本地命令行工具中执行，形如： <code>https://github.com/yourname/blog.git</code>。</p><p>在本地 blog 目录，执行以下命令 (<a href="https://help.github.com/en/github/using-git/adding-a-remote" target="_blank" rel="noopener">参考</a>)，将 hexo 主程序代码上传到 Github 上的 <strong>blog</strong> 仓库：</p><pre><code class="shell">cd ~/path/to/workspace/bloggit initgit remote add origin https://github.com/yourname/blog.gitgit push -f</code></pre><p>此处操作，未接触过 git 的朋友，建议学习一下 <a href="https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html" target="_blank" rel="noopener">git 相关操作</a>后进行，或者使用 <a href="https://www.sourcetreeapp.com/" target="_blank" rel="noopener">SourceTree</a> 等可视化工具。</p><h4 id="主题设置"><a href="#主题设置" class="headerlink" title="主题设置"></a>主题设置</h4><p>你可以使用默认主题，也可以使用主流第三方主题，比如 <a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">Next</a>，具体配置方法自行查看：</p><p><a href="https://theme-next.org/docs/getting-started/" target="_blank" rel="noopener">https://theme-next.org/docs/getting-started/</a></p><h4 id="构建和发布"><a href="#构建和发布" class="headerlink" title="构建和发布"></a>构建和发布</h4><p>无论我们是否需要自动化构建和发布，都需要在本地尝试发布静态博客，把这个步骤走通以后，再进行后续的高阶设置。</p><h5 id="修改-Hexo-设置"><a href="#修改-Hexo-设置" class="headerlink" title="修改 Hexo 设置"></a>修改 Hexo 设置</h5><p>在 <code>_config.yml</code> 文件中，搜索 <code>deploy</code>，修改为 <code>weblog</code> 对应的仓库：</p><pre><code class="yaml">deploy:- type: git  repo: git@github.com:yourname/weblog.git # yourname 替换为你的 github 真实用户名  branch: gh-pages</code></pre><h5 id="安装发布插件"><a href="#安装发布插件" class="headerlink" title="安装发布插件"></a>安装发布插件</h5><pre><code class="shell">npm install hexo-deployer-git --save</code></pre><h5 id="构建并发布"><a href="#构建并发布" class="headerlink" title="构建并发布"></a>构建并发布</h5><pre><code class="shell">hexo g -d</code></pre><h5 id="查看发布状态"><a href="#查看发布状态" class="headerlink" title="查看发布状态"></a>查看发布状态</h5><p>此时我们打开 github.com/yourname/weblog/settings 的仓库配置页面，找到 <code>GitHub Pages</code> 这一栏，你会找到一个相应的访问地址，那就是你的博客地址了，形如（<a href="https://guides.github.com/features/pages/" target="_blank" rel="noopener">参考</a>）：</p><p><img src="https://guides.github.com/features/pages/launch-theme-chooser.png" alt=""></p><p>至此，你已经完成了最基本的迁移，如果需要绑定域名，只需要填下下面的 <code>Custom Domain</code> 信息即可。</p><p>需要注意的是，<strong>当你绑定域名时需要做一些其他的关联操作，这个将在下面的专门章节中讲解</strong>。</p><h4 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h4><p>如果需要为 weblog 仓库上的页面添加独立域名，可以参考 <a href="https://help.github.com/en/github/working-with-github-pages/about-custom-domains-and-github-pages" target="_blank" rel="noopener">Github 官方手册</a>，主要关注以下链接：</p><ul><li><a href="https://help.github.com/en/github/working-with-github-pages/about-custom-domains-and-github-pages#using-a-subdomain-for-your-github-pages-site" target="_blank" rel="noopener">Using a subdomain for your GitHub Pages site</a> (绑定子域名，比如： xx.yy.com)</li><li><a href="https://help.github.com/en/github/working-with-github-pages/about-custom-domains-and-github-pages#using-an-apex-domain-for-your-github-pages-site" target="_blank" rel="noopener">Using an apex domain for your GitHub Pages site</a> （绑定顶级域名，比如： yy.com）</li></ul><p>按照官网所说的步骤设置即可，Github 会自动往仓库里添加一个名为 <code>CNAME</code> 的文件，由于 Hexo 每次构建时，都会删除所有的静态文件，所以我们需要将此文件原样拷贝到本地 blog 程序下的 <code>source</code> 目录中。</p><p>当域名审核完毕后，就可以勾选 <code>Enforce HTTPS</code> 复选框。至此，整个博客的迁移工作也就已经基本完成了。</p><h4 id="自动化构建和发布"><a href="#自动化构建和发布" class="headerlink" title="自动化构建和发布"></a>自动化构建和发布</h4><h5 id="添加秘钥对"><a href="#添加秘钥对" class="headerlink" title="添加秘钥对"></a>添加秘钥对</h5><p>打开命令行提示符，输入如下命令，创建秘钥对（如果是 Windows 电脑需要用 ssh-keygen 命令生成一组私钥和公钥）：</p><pre><code class="shell">ssh-keygen -f blog-deploy-key # 无脑回车</code></pre><p>产生如下文件：</p><ul><li><code>blog-deploy-key</code> (私钥)</li><li><code>blog-deploy-key.pub</code> (公钥)</li></ul><p>在 Github 仓库中，做如下操作：</p><ul><li>在 weblog 仓库中，点击 <code>settings -&gt; Deploy keys -&gt; Add deploy key</code>，填写 <code>name</code> 为 <code>blog-deploy-key.pub</code>, <code>value</code> 为<strong>公钥</strong> (blog-deploy-key.pub) 中所有的文本内容（可以用 vscode、sublime 等文本编辑器打开）</li><li>在 blog 仓库中，点击 <code>settings -&gt; Deploy keys -&gt; Add deploy key</code>，填写 <code>name</code> 为 <code>HEXO_DEPLOY_PRI</code>, <code>value</code> 为<strong>私钥</strong> (blog-deploy-key) 中所有的文本内容</li></ul><h5 id="配置持续集成-发布（CI-CD）"><a href="#配置持续集成-发布（CI-CD）" class="headerlink" title="配置持续集成/发布（CI/CD）"></a>配置持续集成/发布（CI/CD）</h5><p>在 blog 仓库中，点击 <code>Actions -&gt; New Workflow -&gt; Set up a workflow yourself</code>，输入文件内容如下：</p><pre><code class="yaml"># This is a basic workflow to help you get started with Actionsname: Publish latest blog# Controls when the action will run. Triggers the workflow on push or pull request# events but only for the master branchon:  push:    branches: [ master ]  pull_request:    branches: [ master ]# A workflow run is made up of one or more jobs that can run sequentially or in paralleljobs:  build:    runs-on: ubuntu-latest    strategy:      matrix:        node-version: [10.*]    steps:      - uses: actions/checkout@v1      - name: Use Node.js ${{ matrix.node-version }}        uses: actions/setup-node@v1        with:          node-version: ${{ matrix.node-version }}      # 注意将 user.email 修改为你自己的      - name: Configuration environment        env:          HEXO_DEPLOY_PRI: ${{secrets.HEXO_DEPLOY_PRI}}        run: |          mkdir -p ~/.ssh/          echo &quot;$HEXO_DEPLOY_PRI&quot; &gt; ~/.ssh/id_rsa          chmod 600 ~/.ssh/id_rsa          ssh-keyscan github.com &gt;&gt; ~/.ssh/known_hosts          git config --global user.name &quot;Blog CI Action&quot;          git config --global user.email &quot;yourname@email.com&quot;      - name: Install dependencies        run: |          npm i -g hexo-cli          npm ci      - name: Publish hexo        run: |          npm run publish      # 这一步的主要目的是向百度站长 API 提交链接，如果有需要再取消注释      # - name: Submit to baidu      #   run: |      #     bash submit.sh</code></pre><h5 id="完成-CICD-参考"><a href="#完成-CICD-参考" class="headerlink" title="完成 CICD 参考"></a>完成 CICD <a href="https://hdj.me/github-actions-hexo-cicd/" target="_blank" rel="noopener">参考</a></h5><p>至此，你每一次同步 blog 仓库的代码到 github 都会触发 CICD actions，博客就会自动构建发布了。盗一张阮一峰的图给大家看看构建过程的 log 长啥样：</p><p><img src="https://www.wangbase.com/blogimg/asset/201909/bg2019091108.jpg" alt=""></p><p>更多高阶玩法可以查看阮一峰的 <a href="http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html" target="_blank" rel="noopener">Github Actions 入门教程</a>。</p><h4 id="SEO"><a href="#SEO" class="headerlink" title="SEO"></a>SEO</h4><p>先安装和配置以下这几个插件：</p><ul><li><a href="https://github.com/hexojs/hexo-generator-sitemap" target="_blank" rel="noopener">hexo-generator-sitemap</a></li><li><a href="https://github.com/coneycode/hexo-generator-baidu-sitemap" target="_blank" rel="noopener">hexo-generator-baidu-sitemap</a></li><li><a href="https://github.com/hexojs/hexo-generator-feed" target="_blank" rel="noopener">hexo-generator-feed</a></li></ul><p>时间有限暂时先不详细的说这部分内容了，先放出 CI/CD 这一步中缺失的 <code>submit.sh</code> 源码：</p><pre><code class="shell">#!/bin/bash# Generate sitemap.txtsed -n &#39;s:.*&lt;loc&gt;\(.*\)&lt;/loc&gt;.*:\1:p&#39; ./public/baidusitemap.xml &gt; ./public/sitemap.txt# submit to baidu# 在 https://ziyuan.baidu.com/linksubmit 中获取相关 tokencurl -H &#39;Content-Type:text/plain&#39; --data-binary @public/sitemap.txt &quot;http://data.zz.baidu.com/urls?site=https://interjc.net&amp;token=your_baidu_token&quot;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;写在最前面的话&quot;&gt;&lt;a href=&quot;#写在最前面的话&quot; class=&quot;headerlink&quot; title=&quot;写在最前面的话&quot;&gt;&lt;/a&gt;写在最前面的话&lt;/h3&gt;&lt;p&gt;大概从 03 年开始接触博客到现在，已有十多年。早期换过无数的 BSP，比如 Blogbus、Live Space、百度空间、Blogger 等；也通过自建服务的方式，搭建过 Wordpress。由于这样那样可抗或不可抗的缘由，搬家无数次，用过第三方服务、免费虚拟主机、合租虚拟主机、VPS。遭遇过各种域名、主机事故，比如被封、被黑、服务中断等，本博客却从未中断，主要内容也通过一次次的迁移得以延续。能延续这么久（虽然最近一些年，由于自己懒，长时间处于半停滞状态），个人感觉最重要的一点在于，购买了博客专用的顶级域名 &lt;code&gt;interjc.net&lt;/code&gt;，这个域名伴随了各个时期不同形态的本博客，也延续了与博友和读者之间的羁绊。&lt;/p&gt;
+&lt;p&gt;自从&lt;a href=&quot;http://interjc.net/homezz-host/&quot;&gt;东哥的虚拟主机服务&lt;/a&gt;关停以后，本博客就一直托管在 &lt;a href=&quot;https://www.vultr.com/?ref=7500552&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Vultr VPS&lt;/a&gt; 上，速度和稳定性都还 OK，并且由于是 VPS，还通过 &lt;a href=&quot;https://letsencrypt.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Let’s encrypted&lt;/a&gt; 启用了 &lt;code&gt;https&lt;/code&gt;，整个使用还是比较平滑的。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="it" scheme="https://interjc.net/categories/it/"/>
+    
+    
+      <category term="wordpress" scheme="https://interjc.net/tags/wordpress/"/>
+    
+      <category term="hexo" scheme="https://interjc.net/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>你好，Hexo！</title>
+    <link href="https://interjc.net/2020-04-12/hello-Hexo/"/>
+    <id>https://interjc.net/2020-04-12/hello-Hexo/</id>
+    <published>2020-04-12T11:48:23.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>从今天起，本 Blog 切换至 Hexo on Github，至此，本人的个人博客正式与 Wordpress 告别，如果 Github 不改变政策，应该不会再搬家。</p><p>基本上所有的文章都迁移过来了，但是以往的评论区信息基本已经全部丢失，实在抱歉了。</p><p>RSS Feed 短时间内可能会存在不正常的情况，后续想办法恢复了。</p><p>以前的友情链接，移到了 <a href="https://interjc/about" target="_blank" rel="noopener">关于</a> 页面和侧边栏，有需要交换链接的博主，也可在此留言。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;从今天起，本 Blog 切换至 Hexo on Github，至此，本人的个人博客正式与 Wordpress 告别，如果 Github 不改变政策，应该不会再搬家。&lt;/p&gt;
+&lt;p&gt;基本上所有的文章都迁移过来了，但是以往的评论区信息基本已经全部丢失，实在抱歉了。&lt;/p&gt;
+&lt;p
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>独立博客</title>
+    <link href="https://interjc.net/2020-03-14/e7-8b-ac-e7-ab-8b-e5-8d-9a-e5-ae-a2-2/"/>
+    <id>https://interjc.net/2020-03-14/e7-8b-ac-e7-ab-8b-e5-8d-9a-e5-ae-a2-2/</id>
+    <published>2020-03-14T02:42:00.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>独立博客的繁荣似乎只是几年以前，但掐指一算已经是近十年的事情了。 </p><p>友情链接里的朋友们，很多已经 404，常用的虚拟主机也已经陆续停业，打开 RSS 阅读器，还在继续更新的个人博客也已不多。 作为社交自媒体的最初形态，个人独立博客的份额正在一步步被平台化的工具蚕食，个人的精力也更热衷于用来发表快餐内容。高昂的资源、维护、推广成本使得更多人的独立博客吃灰、迁移（到各种其他轻量级平台）或关闭。 </p><p>但我是否真的不需要一个独立博客了？我的初心是什么？我是为什么不用 BSP 而下定决心买域名、买主机，甚至学习 PHP、前端，来维护自己的独立博客的？归根结底还是因为有一颗追求独立自主的心吧。 </p><p>疫情期间，愈发觉得快餐信息的产和销，虽然带来了经济效益以及短时间内心理上的满足（似乎自己是在学东西、写东西），但只有长文的书写和正儿八经的书籍阅读才能做到真正的脑力磨练。 </p><p>将来希望还是把输出的重心放在独立博客，其他平台只作为输入。希望归来还是少年</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;独立博客的繁荣似乎只是几年以前，但掐指一算已经是近十年的事情了。 &lt;/p&gt;
+&lt;p&gt;友情链接里的朋友们，很多已经 404，常用的虚拟主机也已经陆续停业，打开 RSS 阅读器，还在继续更新的个人博客也已不多。 作为社交自媒体的最初形态，个人独立博客的份额正在一步步被平台化的工具
+      
+    
+    </summary>
+    
+    
+      <category term="琐事" scheme="https://interjc.net/categories/%E7%90%90%E4%BA%8B/"/>
+    
+    
+      <category term="life" scheme="https://interjc.net/tags/life/"/>
+    
+      <category term="blog" scheme="https://interjc.net/tags/blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Reactive in 2020</title>
+    <link href="https://interjc.net/2020-01-29/reactive-in-2020/"/>
+    <id>https://interjc.net/2020-01-29/reactive-in-2020/</id>
+    <published>2020-01-29T04:23:46.000Z</published>
+    <updated>2020-04-19T15:28:18.313Z</updated>
+    
+    <content type="html"><![CDATA[<p>2020 年，作为武汉人，经历了<a href="https://zh.wikipedia.org/wiki/2019%EF%BC%8D2020%E5%B9%B4%E6%96%B0%E5%9E%8B%E5%86%A0%E7%8B%80%E7%97%85%E6%AF%92%E8%82%BA%E7%82%8E%E4%BA%8B%E4%BB%B6" target="_blank" rel="noopener">一个不平凡的春节</a>，同时自己也有一些变化，总之 2020 年是转变的一年。 今年准备重新使用这个 Blog，保持每个月（争取每周）都会有更新，分享一些有意思的事情。 敬请还在关注本 Blog 的朋友们监督。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;2020 年，作为武汉人，经历了&lt;a href=&quot;https://zh.wikipedia.org/wiki/2019%EF%BC%8D2020%E5%B9%B4%E6%96%B0%E5%9E%8B%E5%86%A0%E7%8B%80%E7%97%85%E6%AF%92%E
+      
+    
+    </summary>
+    
+    
+      <category term="随便说说" scheme="https://interjc.net/categories/%E9%9A%8F%E4%BE%BF%E8%AF%B4%E8%AF%B4/"/>
+    
+    
+      <category term="life" scheme="https://interjc.net/tags/life/"/>
+    
+      <category term="me" scheme="https://interjc.net/tags/me/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>放弃使用七牛图床</title>
+    <link href="https://interjc.net/2018-09-16/e6-94-be-e5-bc-83-e4-bd-bf-e7-94-a8-e4-b8-83-e7-89-9b-e5-9b-be-e5-ba-8a/"/>
+    <id>https://interjc.net/2018-09-16/e6-94-be-e5-bc-83-e4-bd-bf-e7-94-a8-e4-b8-83-e7-89-9b-e5-9b-be-e5-ba-8a/</id>
+    <published>2018-09-16T14:02:43.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>以前为了节省流量在本 Blog 中使用了各种图床来托管所用到的图片，这就是以风险换流量，现在风险来了。</p><p>今天收到一封七牛的邮件，说是将要收回测试域名，打开链接一看，讲的是这个：<a href="https://developer.qiniu.com/fusion/kb/1319/test-domain-access-restriction-rules" target="_blank" rel="noopener">测试域名使用规范</a> ，基本上就是一个帅锅行为，上传文件使用服务器给的域名，会定期更换，如果固定域名的话需要备案。</p><p>综合多种因素考虑，只有跟七牛图床说拜拜了，本站某些配图届时将直接失效，还请谅解。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;以前为了节省流量在本 Blog 中使用了各种图床来托管所用到的图片，这就是以风险换流量，现在风险来了。&lt;/p&gt;
+&lt;p&gt;今天收到一封七牛的邮件，说是将要收回测试域名，打开链接一看，讲的是这个：&lt;a href=&quot;https://developer.qiniu.com/fusio
+      
+    
+    </summary>
+    
+    
+      <category term="Web" scheme="https://interjc.net/categories/Web/"/>
+    
+    
+      <category term="七牛" scheme="https://interjc.net/tags/%E4%B8%83%E7%89%9B/"/>
+    
+      <category term="图床" scheme="https://interjc.net/tags/%E5%9B%BE%E5%BA%8A/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>再续友情链接</title>
+    <link href="https://interjc.net/2018-08-08/e5-86-8d-e7-bb-ad-e5-8f-8b-e6-83-85-e9-93-be-e6-8e-a5/"/>
+    <id>https://interjc.net/2018-08-08/e5-86-8d-e7-bb-ad-e5-8f-8b-e6-83-85-e9-93-be-e6-8e-a5/</id>
+    <published>2018-08-08T05:47:42.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近一直没有更新博客，因为实在是太懒了，之前又由于主机故障，导致数据库数据丢失了一部分，所以现在只能找回文章和评论，但是友链什么的已然丢失了。 烦请以前跟我交换过链接的朋友，在此 Post 下留言，我们把链接给续上😄</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近一直没有更新博客，因为实在是太懒了，之前又由于主机故障，导致数据库数据丢失了一部分，所以现在只能找回文章和评论，但是友链什么的已然丢失了。 烦请以前跟我交换过链接的朋友，在此 Post 下留言，我们把链接给续上😄&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="Blabla" scheme="https://interjc.net/categories/Blabla/"/>
+    
+    
+      <category term="me" scheme="https://interjc.net/tags/me/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在 macOS 中输出文件结构树形文本图</title>
+    <link href="https://interjc.net/2018-01-08/e5-9c-a8-macos-e4-b8-ad-e8-be-93-e5-87-ba-e6-96-87-e4-bb-b6-e7-bb-93-e6-9e-84-e6-a0-91-e5-bd-a2-e6-96-87-e6-9c-ac-e5-9b-be/"/>
+    <id>https://interjc.net/2018-01-08/e5-9c-a8-macos-e4-b8-ad-e8-be-93-e5-87-ba-e6-96-87-e4-bb-b6-e7-bb-93-e6-9e-84-e6-a0-91-e5-bd-a2-e6-96-87-e6-9c-ac-e5-9b-be/</id>
+    <published>2018-01-08T14:09:14.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>看到标题你一定会想：「文件结构树形文本图」，这是什么鬼？其实就是如下图所示的这个东西： <img src="http://cdn.osxdaily.com/wp-content/uploads/2016/09/view-folder-tree-mac-command-line-2.jpg" alt=""> 在 macOS 中我们只要安装了 「tree」 这个命令行工具，就可以轻易地获取这个功能，安装很简单：</p><p># 安装<br>brew install tree<br># 使用<br>tree</p><p>是不是很简单？使用的前提是你要安装过 <a href="https://brew.sh/index_zh-cn.html" target="_blank" rel="noopener">Homebrew</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;看到标题你一定会想：「文件结构树形文本图」，这是什么鬼？其实就是如下图所示的这个东西： &lt;img src=&quot;http://cdn.osxdaily.com/wp-content/uploads/2016/09/view-folder-tree-mac-command-lin
+      
+    
+    </summary>
+    
+    
+      <category term="Tools" scheme="https://interjc.net/categories/Tools/"/>
+    
+    
+      <category term="Tools" scheme="https://interjc.net/tags/Tools/"/>
+    
+      <category term="mac" scheme="https://interjc.net/tags/mac/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决 ElementUI 1.X 中 Table 表头错位的问题</title>
+    <link href="https://interjc.net/2017-10-31/e8-a7-a3-e5-86-b3-elementui-1-x-e4-b8-ad-table-e8-a1-a8-e5-a4-b4-e9-94-99-e4-bd-8d-e7-9a-84-e9-97-ae-e9-a2-98/"/>
+    <id>https://interjc.net/2017-10-31/e8-a7-a3-e5-86-b3-elementui-1-x-e4-b8-ad-table-e8-a1-a8-e5-a4-b4-e9-94-99-e4-bd-8d-e7-9a-84-e9-97-ae-e9-a2-98/</id>
+    <published>2017-10-31T14:46:29.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/ElemeFE/element" target="_blank" rel="noopener">ElementUI</a> 是一个还算不错的组件库，基于 Vue 或者 React 的都有，这儿说的是 Vue 版本，ElTable 组件在 Chrome 中使用时会存在表头错位的问题，通过查看 DOM 发现 thead 中被自动插入了一个 <code>th.gutter</code>，在 CSS 中对其设置为 <code>display: none;</code> 即可解决该问题。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://github.com/ElemeFE/element&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;ElementUI&lt;/a&gt; 是一个还算不错的组件库，基于 Vue 或者 React 的都有，这儿说的是 Vue 版本，El
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>解决 SourceTree 中无法使用 External Diff Tool 的问题</title>
+    <link href="https://interjc.net/2017-10-29/e8-a7-a3-e5-86-b3-sourcetree-e4-b8-ad-e6-97-a0-e6-b3-95-e4-bd-bf-e7-94-a8-external-diff-tool-e7-9a-84-e9-97-ae-e9-a2-98/"/>
+    <id>https://interjc.net/2017-10-29/e8-a7-a3-e5-86-b3-sourcetree-e4-b8-ad-e6-97-a0-e6-b3-95-e4-bd-bf-e7-94-a8-external-diff-tool-e7-9a-84-e9-97-ae-e9-a2-98/</id>
+    <published>2017-10-29T14:32:20.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>打开 SourceTree，按 ⌘ + ,，在 General 选项卡中，勾选「Allow SourceTree to modify your global config files」，然后就可以在 Diff 界面设置自己想要使用的 External Diff Tool 了。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;打开 SourceTree，按 ⌘ + ,，在 General 选项卡中，勾选「Allow SourceTree to modify your global config files」，然后就可以在 Diff 界面设置自己想要使用的 External Diff Tool 了
+      
+    
+    </summary>
+    
+    
+      <category term="Mac" scheme="https://interjc.net/categories/Mac/"/>
+    
+    
+      <category term="mac" scheme="https://interjc.net/tags/mac/"/>
+    
+      <category term="sourcetree" scheme="https://interjc.net/tags/sourcetree/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Webpack 开启 preload / prefetch</title>
+    <link href="https://interjc.net/2017-09-15/webpack-e5-bc-80-e5-90-af-preload-prefetch/"/>
+    <id>https://interjc.net/2017-09-15/webpack-e5-bc-80-e5-90-af-preload-prefetch/</id>
+    <published>2017-09-15T05:50:35.000Z</published>
+    <updated>2020-04-19T15:28:18.317Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先你需要 Webpack 3.x 才可以完整的拥有这些功能，然后安装 <code>preload-webpack-plugin</code></p><pre><code class="js">npm install --save-dev preload-webpack-plugin</code></pre><p>然后在 webpack 配置里面加上:</p><pre><code class="js">plugins: [  new HtmlWebpackPlugin(),  new PreloadWebpackPlugin()]</code></pre><p>上面的代码会执行默认设置，所有动态加载的内容会以 preload 的形式加载，但这样会报 warning，并且也是非必要的，所以我们稍作修改，使用 prefetch 的方式，闲时加载:</p><pre><code class="js">plugins: [  new HtmlWebpackPlugin(),  new PreloadWebpackPlugin({    rel: &#39;prefetch&#39;  })]</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;首先你需要 Webpack 3.x 才可以完整的拥有这些功能，然后安装 &lt;code&gt;preload-webpack-plugin&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;npm install --save-dev preload-webpack-
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="webpack" scheme="https://interjc.net/tags/webpack/"/>
+    
+      <category term="prefetch" scheme="https://interjc.net/tags/prefetch/"/>
+    
+      <category term="preload" scheme="https://interjc.net/tags/preload/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>升级 Webpack 至 3.x</title>
+    <link href="https://interjc.net/2017-09-15/e5-8d-87-e7-ba-a7-webpack-e8-87-b3-3-x/"/>
+    <id>https://interjc.net/2017-09-15/e5-8d-87-e7-ba-a7-webpack-e8-87-b3-3-x/</id>
+    <published>2017-09-15T05:35:52.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>把 Webpack 从 2.x 升级到 3.x 以后，发现 HMR 无法正常使用了，每次修改文件，页面都会通过 reload 的方式来刷新内容，而不是 Module Replacement 的方式，搜了一大圈，找到办法，注释掉下面的配置即可（<a href="https://github.com/vuejs-templates/webpack/issues/751" target="_blank" rel="noopener">via</a>）：</p><pre><code class="js">compiler.plugin(&#39;compilation&#39;, function (compilation) {  compilation.plugin(&#39;html-webpack-plugin-after-emit&#39;, function (data, cb) {    hotMiddleware.publish({ action: &#39;reload&#39; })    cb()  })})</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;把 Webpack 从 2.x 升级到 3.x 以后，发现 HMR 无法正常使用了，每次修改文件，页面都会通过 reload 的方式来刷新内容，而不是 Module Replacement 的方式，搜了一大圈，找到办法，注释掉下面的配置即可（&lt;a href=&quot;https:/
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="webpack" scheme="https://interjc.net/tags/webpack/"/>
+    
+      <category term="webpack3" scheme="https://interjc.net/tags/webpack3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>NVM 使用淘宝镜像</title>
+    <link href="https://interjc.net/2017-07-12/nvm-e4-bd-bf-e7-94-a8-e6-b7-98-e5-ae-9d-e9-95-9c-e5-83-8f/"/>
+    <id>https://interjc.net/2017-07-12/nvm-e4-bd-bf-e7-94-a8-e6-b7-98-e5-ae-9d-e9-95-9c-e5-83-8f/</id>
+    <published>2017-07-12T15:53:28.000Z</published>
+    <updated>2020-04-19T15:28:18.313Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/creationix/nvm" target="_blank" rel="noopener">nvm</a> 是一个好用的 <a href="https://nodejs.org/" target="_blank" rel="noopener">nodejs</a> 版本管理工具，但由于众所周知的原因，当使用 nvm 下载安装 nodejs 时，有时候会出现龟速甚至无法下载的情况，其实他是可以换源的。 MAC / Linux 下只需要执行如下命令即可：</p><pre><code>export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node/</code></pre><p><a href="http://blog.csdn.net/qq_29262849/article/details/52973095" target="_blank" rel="noopener">Windows 的方案点这里</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://github.com/creationix/nvm&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;nvm&lt;/a&gt; 是一个好用的 &lt;a href=&quot;https://nodejs.org/&quot; target=&quot;_blank&quot; r
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="Tools" scheme="https://interjc.net/tags/Tools/"/>
+    
+      <category term="dev" scheme="https://interjc.net/tags/dev/"/>
+    
+      <category term="nodejs" scheme="https://interjc.net/tags/nodejs/"/>
+    
+      <category term="nvm" scheme="https://interjc.net/tags/nvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决 Chrome 中 ElementUI/ElTable 组件不断自动计算宽度的问题</title>
+    <link href="https://interjc.net/2017-06-01/e8-a7-a3-e5-86-b3-chrome-e4-b8-ad-elementuieltable-e7-bb-84-e4-bb-b6-e4-b8-8d-e6-96-ad-e8-87-aa-e5-8a-a8-e8-ae-a1-e7-ae-97-e5-ae-bd-e5-ba-a6-e7-9a-84-e9-97-ae-e9-a2-98/"/>
+    <id>https://interjc.net/2017-06-01/e8-a7-a3-e5-86-b3-chrome-e4-b8-ad-elementuieltable-e7-bb-84-e4-bb-b6-e4-b8-8d-e6-96-ad-e8-87-aa-e5-8a-a8-e8-ae-a1-e7-ae-97-e5-ae-bd-e5-ba-a6-e7-9a-84-e9-97-ae-e9-a2-98/</id>
+    <published>2017-06-01T14:03:04.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>当使用 Flex 布局，并在 flex:1 的元素中放置 el-table 组件时，就有一定的几率出现，el-table 的宽度不断不重新计算的 BUG。 解决方法，给 flex:1 的元素加上 <code>overflow-x: hidden;</code> </p><p><a href="https://github.com/ElemeFE/element/issues/2716" target="_blank" rel="noopener">via</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;当使用 Flex 布局，并在 flex:1 的元素中放置 el-table 组件时，就有一定的几率出现，el-table 的宽度不断不重新计算的 BUG。 解决方法，给 flex:1 的元素加上 &lt;code&gt;overflow-x: hidden;&lt;/code&gt; &lt;/p&gt;
+&lt;
+      
+    
+    </summary>
+    
+    
+      <category term="Web" scheme="https://interjc.net/categories/Web/"/>
+    
+    
+      <category term="dev" scheme="https://interjc.net/tags/dev/"/>
+    
+      <category term="ElementUI" scheme="https://interjc.net/tags/ElementUI/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PS4 更新 4.7 固件</title>
+    <link href="https://interjc.net/2017-06-01/ps4-e6-9b-b4-e6-96-b0-4-7-e5-9b-ba-e4-bb-b6/"/>
+    <id>https://interjc.net/2017-06-01/ps4-e6-9b-b4-e6-96-b0-4-7-e5-9b-ba-e4-bb-b6/</id>
+    <published>2017-06-01T12:00:18.000Z</published>
+    <updated>2020-04-19T15:28:18.313Z</updated>
+    
+    <content type="html"><![CDATA[<p>在国外的Reddit和索尼官方论坛，以及国内的一些主机论坛上都有玩家爆料称，更新了4.7系统后 PS4 主机会出现黑屏卡死的现象。而且这一问题应该并非硬件导致，因为无论是老版主机用户还是新版 PS4 Pro 和 PS4 Slim 主机的用户都遇到过这种现象。 目前索尼官方还未就 4.7 系统的 bug 做出回应，不过民间已经有人发布了一些可行的解决方案：</p><ol><li>如果你已经更新了4.7系统并遭遇了黑屏卡死的问题，首先按电源按钮来强制关闭PS4，等待关闭后再按住电源按钮不放手，直到听到哔哔两声进入安全模式。在安全模式下重新建立数据库，然后重新启动回到安全模式，从那里安装更新，随后问题就被修复，主机正常工作。 </li><li>如果你还没有更新4.7系统，那么在安全模式下启动主机，然后确保断开网线或Wi-Fi连接，重新建立数据库启动主机，之后就能正常工作并且联网进行更新。 </li><li>如果你有外接硬盘，先断开与外接硬盘的连接，然后按电源按钮关闭主机，再开机进入安全模式，然后再重启直到主界面，然后再连接外接硬盘，让系统自动读取和修复，最后再次重启，就能正常联网并更新4.7系统了。</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;在国外的Reddit和索尼官方论坛，以及国内的一些主机论坛上都有玩家爆料称，更新了4.7系统后 PS4 主机会出现黑屏卡死的现象。而且这一问题应该并非硬件导致，因为无论是老版主机用户还是新版 PS4 Pro 和 PS4 Slim 主机的用户都遇到过这种现象。 目前索尼官方还
+      
+    
+    </summary>
+    
+    
+      <category term="Fun" scheme="https://interjc.net/categories/Fun/"/>
+    
+    
+      <category term="PlayStation" scheme="https://interjc.net/tags/PlayStation/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关闭 VSCode 中的 Minimap</title>
+    <link href="https://interjc.net/2017-03-03/e5-85-b3-e9-97-ad-vscode-e4-b8-ad-e7-9a-84-minimap/"/>
+    <id>https://interjc.net/2017-03-03/e5-85-b3-e9-97-ad-vscode-e4-b8-ad-e7-9a-84-minimap/</id>
+    <published>2017-03-03T01:55:57.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>无法理解很多人喜欢在编辑器里面显示 minimap 的习惯，反正我是一直都关闭的，然而最近一次更新以后，vscode 里面出现了 minimap，并且在「用户设置」里面设置 “editor.minimap.enabled”: false 也无法关闭，搜了半天，发现更新以后，工作区设置里面多了一项 “editor.minimap.enabled”: true，怒删，问题解决。 <a href="https://github.com/Microsoft/vscode/issues/21665#issuecomment-283522182" target="_blank" rel="noopener">原文</a>参考：</p><blockquote><p>After the upgrade, for some reason the workspace settings had minimap.enable set to “true”. I didn’t put that in there, but it got there somehow during the upgrade.</p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;无法理解很多人喜欢在编辑器里面显示 minimap 的习惯，反正我是一直都关闭的，然而最近一次更新以后，vscode 里面出现了 minimap，并且在「用户设置」里面设置 “editor.minimap.enabled”: false 也无法关闭，搜了半天，发现更新以后，
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="vscode" scheme="https://interjc.net/tags/vscode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决 GitHub 和 Bitbucket 速度慢的问题</title>
+    <link href="https://interjc.net/2017-03-01/e8-a7-a3-e5-86-b3-github-e5-92-8c-bitbucket-e9-80-9f-e5-ba-a6-e6-85-a2-e7-9a-84-e9-97-ae-e9-a2-98/"/>
+    <id>https://interjc.net/2017-03-01/e8-a7-a3-e5-86-b3-github-e5-92-8c-bitbucket-e9-80-9f-e5-ba-a6-e6-85-a2-e7-9a-84-e9-97-ae-e9-a2-98/</id>
+    <published>2017-03-01T14:08:07.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用 GitHub 或者 Bitbucket 管理 git 代码时，有时候会遇到 git clone 或者 git push 特别慢的问题，并不是因为 github.com 的这个域名被限制了。而是 github.global.ssl.fastly.net 这个域名被限制了。 所以只要把 github.global.ssl.fastly.net 这个域名添加到 proxy 的路由表里面即可（设置方法你懂的）。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;使用 GitHub 或者 Bitbucket 管理 git 代码时，有时候会遇到 git clone 或者 git push 特别慢的问题，并不是因为 github.com 的这个域名被限制了。而是 github.global.ssl.fastly.net 这个域名被限制了
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="Harmony" scheme="https://interjc.net/tags/Harmony/"/>
+    
+      <category term="Git" scheme="https://interjc.net/tags/Git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Number 类型的 input 输入框中输入浮点数</title>
+    <link href="https://interjc.net/2016-12-20/number-e7-b1-bb-e5-9e-8b-e7-9a-84-input-e8-be-93-e5-85-a5-e6-a1-86-e4-b8-ad-e8-be-93-e5-85-a5-e6-b5-ae-e7-82-b9-e6-95-b0/"/>
+    <id>https://interjc.net/2016-12-20/number-e7-b1-bb-e5-9e-8b-e7-9a-84-input-e8-be-93-e5-85-a5-e6-a1-86-e4-b8-ad-e8-be-93-e5-85-a5-e6-b5-ae-e7-82-b9-e6-95-b0/</id>
+    <published>2016-12-20T07:13:39.000Z</published>
+    <updated>2020-04-19T15:28:18.313Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 HTML5 中，input 元素有了一个好用的 type: Number，当我们把一个 input 设置为 Number 类型以后，它就可以接收 max、min 等参数设置最大值最小值，达到原生表单控制的目的：</p><p>但是这么一弄，问题来了，当我们输入浮点型的数字时就会报错，难道它只能接收整数吗？显然不是的，他不光可以接受浮点型，还可以控制输入到小数点后几位，以及每次增加的步幅（step），当我们需要精确到小数点后两位时，只要把 step 设置为 0.01 即可：</p><p>Have fun!</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;在 HTML5 中，input 元素有了一个好用的 type: Number，当我们把一个 input 设置为 Number 类型以后，它就可以接收 max、min 等参数设置最大值最小值，达到原生表单控制的目的：&lt;/p&gt;
+&lt;p&gt;但是这么一弄，问题来了，当我们输入浮点型的数
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="front" scheme="https://interjc.net/tags/front/"/>
+    
+      <category term="html5" scheme="https://interjc.net/tags/html5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue Syntax Highlight with pug in Sublime Text</title>
+    <link href="https://interjc.net/2016-11-25/vue-syntax-highlight-with-pug-in-sublime-text/"/>
+    <id>https://interjc.net/2016-11-25/vue-syntax-highlight-with-pug-in-sublime-text/</id>
+    <published>2016-11-25T08:11:41.000Z</published>
+    <updated>2020-04-19T15:28:18.317Z</updated>
+    
+    <content type="html"><![CDATA[<p>jade 这个项目组也是够任性的，说改名就改名，造成了 sublime 里面代码高亮失败，升级了 Vue Syntax Highlight 后依然无果，最后查明原因（<a href="https://github.com/vuejs/vue-syntax-highlight/issues/54" target="_blank" rel="noopener">via</a>），原来还要安装一个 pug 的插件才可以，完整的支持如下：</p><blockquote><p>1. 打开 Package Control:Install Package，输入 Vue Syntax Highlight，安装； 2. 参照 1 的方法，输入 pug，安装。</p></blockquote><p>Have fun!</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;jade 这个项目组也是够任性的，说改名就改名，造成了 sublime 里面代码高亮失败，升级了 Vue Syntax Highlight 后依然无果，最后查明原因（&lt;a href=&quot;https://github.com/vuejs/vue-syntax-highlight
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="Tools" scheme="https://interjc.net/tags/Tools/"/>
+    
+      <category term="dev" scheme="https://interjc.net/tags/dev/"/>
+    
+      <category term="sublime" scheme="https://interjc.net/tags/sublime/"/>
+    
+      <category term="vue" scheme="https://interjc.net/tags/vue/"/>
+    
+      <category term="jade" scheme="https://interjc.net/tags/jade/"/>
+    
+      <category term="pug" scheme="https://interjc.net/tags/pug/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>删除 GarageBand 留下的垃圾文件</title>
+    <link href="https://interjc.net/2016-10-31/e5-88-a0-e9-99-a4-garageband-e7-95-99-e4-b8-8b-e7-9a-84-e5-9e-83-e5-9c-be-e6-96-87-e4-bb-b6/"/>
+    <id>https://interjc.net/2016-10-31/e5-88-a0-e9-99-a4-garageband-e7-95-99-e4-b8-8b-e7-9a-84-e5-9e-83-e5-9c-be-e6-96-87-e4-bb-b6/</id>
+    <published>2016-10-31T12:47:36.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>GarageBand 基本上是我每次必删的一个 APP（无论是 Mac 还是 iOS 上），然并卵，Mac 的磁盘管理器上一看，他还是占用了 2.6G 的空间，使用清理工具或者系统自带的工具都没法删除。于是 Google 了一下，找到了<a href="https://discussions.apple.com/thread/7601521?start=0&tstart=0" target="_blank" rel="noopener">办法</a>，删除如下文件即可：</p><ul><li>Macintosh HD/Applications/GarageBand.app (1.16GB) </li><li>Macintosh HD/Library/Application Support/GarageBand (995MB) </li><li>Macintosh HD/Library/Application Support/Logic (880MB) </li><li>Macintosh HD/Library/Audio/Apple Loops (up to 10GB)*</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;GarageBand 基本上是我每次必删的一个 APP（无论是 Mac 还是 iOS 上），然并卵，Mac 的磁盘管理器上一看，他还是占用了 2.6G 的空间，使用清理工具或者系统自带的工具都没法删除。于是 Google 了一下，找到了&lt;a href=&quot;https://di
+      
+    
+    </summary>
+    
+    
+      <category term="Mac" scheme="https://interjc.net/categories/Mac/"/>
+    
+    
+      <category term="mac" scheme="https://interjc.net/tags/mac/"/>
+    
+      <category term="optimize" scheme="https://interjc.net/tags/optimize/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决 Jetty Runner 1.2.0 与 JDK7 不兼容的问题</title>
+    <link href="https://interjc.net/2016-09-29/e8-a7-a3-e5-86-b3-jetty-runner-1-2-0-e4-b8-8e-jdk7-e4-b8-8d-e5-85-bc-e5-ae-b9-e7-9a-84-e9-97-ae-e9-a2-98/"/>
+    <id>https://interjc.net/2016-09-29/e8-a7-a3-e5-86-b3-jetty-runner-1-2-0-e4-b8-8e-jdk7-e4-b8-8d-e5-85-bc-e5-ae-b9-e7-9a-84-e9-97-ae-e9-a2-98/</id>
+    <published>2016-09-29T05:42:08.000Z</published>
+    <updated>2020-04-19T15:28:18.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天手贱把 <a href="https://plugins.jetbrains.com/plugin/7505" target="_blank" rel="noopener">Jetty Runner</a> 自动升级了最新版本 1.2.0，发现项目跑不起来了，报错「Unsupported major.minor version 52.0」，查了一圈发现最新版 Jetty Runner 介绍中有一条「Minimum requirement: JVM / JDK / JRE v8」，这就坑爹了，卸载最新版，降级为上一个版本 1.1.3，完美解决问题。 下载地址：<a href="https://plugins.jetbrains.com/plugin/7505" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7505</a>，选择版本 1.1.3 后的 download，之后在 IntelliJ IDEA 的 Preferences -&gt; Plugins 中，选择 「Install plugin from disk」即可。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今天手贱把 &lt;a href=&quot;https://plugins.jetbrains.com/plugin/7505&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Jetty Runner&lt;/a&gt; 自动升级了最新版本 1.2.0，发现项目跑不起来了，报错「Un
+      
+    
+    </summary>
+    
+    
+      <category term="Development" scheme="https://interjc.net/categories/Development/"/>
+    
+    
+      <category term="Jetty" scheme="https://interjc.net/tags/Jetty/"/>
+    
+  </entry>
+  
+</feed>

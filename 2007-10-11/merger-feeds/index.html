@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <meta name="google-site-verification" content="google-site-verification=gRN8xWrzBmIH1WAiV6u-05zrAtSyu5yMyttsDl1EAPI">
+  <meta name="baidu-site-verification" content="HiNFcZVrAZY2Oz1b">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"interjc.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="由于众所周知的不可调和的原因，我需要将我的Blog订阅地址从Feedburner搬家到坐落于Feedsky的新地址：feed.interjc.net，网上有许多办法，其中很多都需要其读者帮忙。我相信我的读者里懒人很多(我自己也很懒，懒得去做那庞大的工作)，所以我使用了一个折中的办法，往抓虾和鲜果发信(其email分别是zhuaxia@zhuaxia.com和service@joyeach.com)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="合并Feed">
+<meta property="og:url" content="https://interjc.net/2007-10-11/merger-feeds/">
+<meta property="og:site_name" content="糖醋排骨">
+<meta property="og:description" content="由于众所周知的不可调和的原因，我需要将我的Blog订阅地址从Feedburner搬家到坐落于Feedsky的新地址：feed.interjc.net，网上有许多办法，其中很多都需要其读者帮忙。我相信我的读者里懒人很多(我自己也很懒，懒得去做那庞大的工作)，所以我使用了一个折中的办法，往抓虾和鲜果发信(其email分别是zhuaxia@zhuaxia.com和service@joyeach.com)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2007-10-11T18:05:05.000Z">
+<meta property="article:modified_time" content="2020-04-19T15:28:18.313Z">
+<meta property="article:author" content="Justin Chen">
+<meta property="article:tag" content="Blogging">
+<meta property="article:tag" content="feed">
+<meta property="article:tag" content="gfw">
+<meta property="article:tag" content="service">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://interjc.net/2007-10-11/merger-feeds/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>合并Feed | 糖醋排骨</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bbea5cdaac52d6434c49db0ad49decb1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="糖醋排骨" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">糖醋排骨</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">interjc weblog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-hzz">
+
+    <a href="/homezz-host/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>hzz</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://interjc.net/2007-10-11/merger-feeds/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Justin Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="糖醋排骨">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          合并Feed
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2007-10-12 02:05:05" itemprop="dateCreated datePublished" datetime="2007-10-12T02:05:05+08:00">2007-10-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-19 23:28:18" itemprop="dateModified" datetime="2020-04-19T23:28:18+08:00">2020-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Blogging/" itemprop="url" rel="index"><span itemprop="name">Blogging</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2007-10-11/merger-feeds/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2007-10-11/merger-feeds/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>由于众所周知的不可调和的<a href="http://www.google.cn/search?complete=1&hl=zh-CN&newwindow=1&client=aff-os-worldbrowser&hs=GB4&q=feedburner+%E5%92%8C%E8%B0%90&meta=&aq=null" target="_blank" rel="noopener">原因</a>，我需要将我的Blog订阅地址从Feedburner搬家到坐落于Feedsky的新地址：<a href="http://feed.interjc.net" target="_blank" rel="noopener">feed.interjc.net</a>，网上有许多<a href="http://www.google.cn/search?complete=1&hl=zh-CN&newwindow=1&client=aff-os-worldbrowser&hs=7Yj&q=feedburner+%E8%BD%AC%E7%A7%BB+feedsky+%E6%96%B9%E6%B3%95&meta=&aq=null" target="_blank" rel="noopener">办法</a>，其中很多都需要其读者帮忙。我相信我的读者里懒人很多(我自己也很懒，懒得去做那庞大的工作)，所以我使用了一个折中的办法，往抓虾和鲜果发信(其email分别是<a href="mailto:zhuaxia@zhuaxia.com">zhuaxia@zhuaxia.com</a>和service@joyeach.com)，告诉他们我要合并我的feed。 整个过程很顺利，大概1个工作日过后我就收到了这两位合并Feed成功的邮件，feedsky订阅数也增加了一些(很可惜Google Reader没有类似的服务，所幸其现在尚可正常阅读Feedburner的feeds，只是再想通过feed来我blog留言就是难事了)。这个小case完成以后，我有了一点杞人忧天：这个过程实在是太简单了，简单得有点可怕，因为没有什么安全措施来防范冒领。 于是我发了一封邮件给抓虾和鲜果询问此事，很快得到答复，其中抓虾的工作人员回答得比较细心：</p>
+<blockquote>
+<p>对于你提到的这个问题，我们是这样考虑的： 当一位用户发来邮件要求合并时，一般都是因为他自己的Feed地址变更，为了大家能更好的适应这一变化才会要求合并的，而通常情况下新的地址应该是作者自己才知道的。 用户在邮件中写的内容通常包括他博客中大部分的RSS输出地址，这些地址内容应该都是一致的，域名大都也是相关联的。好多地址如果不是作者自己通知，对外一般用户是不会发现的。 而且我们会查看该Feed下的文章，一般情况下如果一个用户更改Feed地址，为了能让大家及时知道，作者会更新一篇自己的博客向大家通知新的地址，以方便大家订阅。如果这两个地址一致一般情况下应该就是该作者自己的要求。 另外其实我们觉得“合并Feed”本身来说，只是为用户提供一个方便的服务，让大家的博客更好为用户浏览。对于恶意要求合并的，应该是极少数的情况，而且对他本身来说也不存在什么意义和影响。我们至今没有收到过作者的投诉，如果这种情况真的发生了，我们这边也会根据具体情况采取相应的补救措施，相信会给大家一个满意的结果。</p>
+</blockquote>
+<p>鲜果的回复比较简短：</p>
+<blockquote>
+<p>您好，合并FEED时我们会人工判定，同时综合多方因素，保证FEED所有人的权益。 另外您的博客上留的EMAIL地址和您发邮件的地址是一样的。</p>
+</blockquote>
+<p>我对这两家公司工作人员的办事效率表示钦佩，回复速度很快，而且是人工的，其说辞咋看一下确实也是无比安全，feed安全应该能获得较好的保护。 只是两家公司工作人员每天要处理无数合并请求，每一个都进行人工审核的话工作量未免太大，他们所说的blog归属权判定办法似乎也很切实有效，可难免有漏洞，比如，如果有人克隆一个某知名blogger的blog在feedsky的feed，然后告知抓虾或鲜果我要合并feed，然后再将其修改为自己的feed，那么这位知名blog的原订户会不会被转接到他的网站？如果他说他的email更改了所以和原blog上的不同又或者现在根本就可以很容易的伪装出任何你想要的邮件发出地址来，这样的判定办法的安全性又在哪里呢？ 我不是说feed的安全有多么重要，可他肯定不是不重要，我也不是说很多人就会这么干，只是林子大了什么鸟都有，总有一天总有人会那么干的，即使没有人会这么干，那么能规避这么一个漏洞总是好的吧？ 我有一个想法~在阅读器网站上设一个页面，由feed所有人自行申请合并feed，通过在其文章中添加验证字符串来证明其feed的所有权；也许这样有可能涉及某些blogs聚合feed的安全，那么完全可以通过计算机随机选出申请合并的feeds中的文章中某几篇，要求合并申请人在这几篇指定的文章里添加指定的字符串，以达到确认其feed所有权的效果。不知道这样的办法是否可行和有效呢？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Blogging/" rel="tag"># Blogging</a>
+              <a href="/tags/feed/" rel="tag"># feed</a>
+              <a href="/tags/gfw/" rel="tag"># gfw</a>
+              <a href="/tags/service/" rel="tag"># service</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2007-10-10/anti-spam/" rel="prev" title="和Spam说再见">
+      <i class="fa fa-chevron-left"></i> 和Spam说再见
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2007-10-19/double-sun/" rel="next" title="重阳节快乐">
+      重阳节快乐 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Justin Chen"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Justin Chen</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">374</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">333</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:interjc+blog@gmail.com" title="Mail → mailto:interjc+blog@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/interjc" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/interjc" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/interjc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;interjc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://interjc.net/atom.xml" title="RSS → https:&#x2F;&#x2F;interjc.net&#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://zeuscn.net/" title="http:&#x2F;&#x2F;zeuscn.net&#x2F;" rel="noopener" target="_blank">囧布斯</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://louishan.com/" title="http:&#x2F;&#x2F;louishan.com&#x2F;" rel="noopener" target="_blank">Louis Han</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Justin Chen</span>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e981390b3aeb9bc" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '6ec783779fdf80ca1420',
+      clientSecret: 'cc123887189e2115ae28d76105c2d0ea7419ccb8',
+      repo        : 'weblog',
+      owner       : 'interjc',
+      admin       : ['interjc'],
+      id          : '3b1f06ee1ce2695539bb2d86fb56cd68',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://interjc.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://interjc.net/2007-10-11/merger-feeds/";
+    this.page.identifier = "2007-10-11/merger-feeds/";
+    this.page.title = "合并Feed";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://interjc.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
